@@ -1,7 +1,7 @@
 import {
-  PRODUCT_LIST_FAILURE,
-  PRODUCT_LIST_REQUEST,
-  PRODUCT_LIST_SUCCESS,
+  FETCH_PRODUCTS_START,
+  FETCH_PRODUCTS_SUCCESS,
+  FETCH_PRODUCTS_FAILURE,
 } from '../actions/types/productTypes';
 
 const initialState = {
@@ -12,11 +12,11 @@ const initialState = {
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
-    case PRODUCT_LIST_REQUEST:
+    case FETCH_PRODUCTS_START:
       return { ...state, products: [], loading: true };
-    case PRODUCT_LIST_SUCCESS:
+    case FETCH_PRODUCTS_SUCCESS:
       return { ...state, loading: false, products: payload };
-    case PRODUCT_LIST_FAILURE:
+    case FETCH_PRODUCTS_FAILURE:
       return { loading: false, products: [], error: payload };
     default:
       return state;
