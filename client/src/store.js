@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleWare from 'redux-saga';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import { persistStore } from 'redux-persist';
 
 import rootSaga from './sagas';
 
@@ -10,11 +11,11 @@ const sagaMiddleware = createSagaMiddleWare();
 
 const middleware = [sagaMiddleware];
 
-const store = createStore(
-  reducers,
-  composeWithDevTools(applyMiddleware(...middleware))
-);
+export const store =
+  process.env.NODE_ENV === 'development'
+    ? createStore(reducers, composeWithDevTools(applyMiddleware(...middleware)))
+    : createStore(reducers, applyMiddleware(...middleware));
 
 sagaMiddleware.run(rootSaga);
 
-export default store;
+export const persistor = persistStore(store);

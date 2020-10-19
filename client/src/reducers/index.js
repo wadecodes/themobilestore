@@ -1,9 +1,21 @@
 import { combineReducers } from 'redux';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
-import productsListReducers from './productsListReducers';
-import productsReducers from './productReducer';
+import productsListReducer from './productsListReducer';
+import productsReducer from './productReducer';
+import cartReducer from './cartReducer';
 
-export default combineReducers({
-  productsList: productsListReducers,
-  productDetails : productsReducers,
+const persistConfig = {
+  key: 'themobilestore',
+  storage,
+  whitelist: ['cart'],
+};
+
+const rootReducer = combineReducers({
+  productsList: productsListReducer,
+  productDetails: productsReducer,
+  cart: cartReducer,
 });
+
+export default persistReducer(persistConfig, rootReducer);
