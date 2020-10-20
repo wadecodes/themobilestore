@@ -31,7 +31,7 @@ const CartScreen = ({ match, location, history }) => {
     if (productId) {
       dispatch(addItemToCartStart(productId, qty));
     }
-  }, [dispatch]);
+  }, [dispatch, productId, qty]);
 
   const MainComponent = () => (
     <Row>

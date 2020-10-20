@@ -32,6 +32,6 @@ function* fetchProductDetailsStart() {
   yield takeLatest(CART_ADD_ITEM_START, fetchProductDetailsAsync);
 }
 
-export function* cartSagas() {
+export default function* cartSagas() {
   yield all([call(fetchProductDetailsStart)]);
 }

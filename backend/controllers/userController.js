@@ -20,13 +20,26 @@ export const authUser = asyncHandler(async (req, res) => {
   }
 
   res.json({
-    sucess: true,
+    success: true,
     _id: user._id,
     email: user.email,
     name: user.name,
     isAdmin: user.isAdmin,
     token: generateToken(user._id),
   });
+});
+
+//* @description    :     Create user profile
+//* @route          :     GET /api/users
+//* @access         :     Public
+export const createUser = asyncHandler(async (req, res) => {
+  let user = await User.findOne({ email: req.body.email });
+  if (user) {
+    res.status(400);
+    throw Error('Email already exists.');
+  }
+  user = await User.create(req.body);
+  res.status(201).json({ success: true });
 });
 
 //* @description    :     Get user profile
@@ -39,7 +52,7 @@ export const getUserProfile = asyncHandler(async (req, res) => {
     throw new Error('The Email does not exist');
   }
   res.json({
-    sucess: true,
+    success: true,
     _id: user._id,
     email: user.email,
     name: user.name,
@@ -47,15 +60,28 @@ export const getUserProfile = asyncHandler(async (req, res) => {
   });
 });
 
-//* @description    :     Get user profile
-//* @route          :     GET /api/users/profile
+//* @description    :     Update user profile
+//* @route          :     PUT /api/users/profile
 //* @access         :     Private
-export const createUser = asyncHandler(async (req, res) => {
-  let user = await User.findOne({ email: req.body.email });
-  if (user) {
-    res.status(400);
-    throw Error('Email already exists.');
+export const updateUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id).select('+password');
+  if (!user) {
+    res.status(404);
+    throw new Error('The Email does not exist');
   }
-  user = await User.create(req.body);
-  res.status(201).json({ success: true });
+  user.name = req.body.name || user.name;
+  user.email = req.body.email || user.email;
+  if (req.body.password) {
+    user.password = req.body.password;
+  }
+
+  const updatedUser = await user.save();
+  res.json({
+    success: true,
+    _id: user._id,
+    email: user.email,
+    name: user.name,
+    isAdmin: user.isAdmin,
+    token: generateToken(updatedUser._id),
+  });
 });

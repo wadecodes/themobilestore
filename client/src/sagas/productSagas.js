@@ -47,6 +47,6 @@ export function* fetchProductStart() {
   yield takeLatest(FETCH_PRODUCT_START, fetchProductAsync);
 }
 
-export function* productSagas() {
+export default function* productSagas() {
   yield all([call(fetchProductsStart), call(fetchProductStart)]);
 }
